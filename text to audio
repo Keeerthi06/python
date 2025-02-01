@@ -1,0 +1,27 @@
+!pip install transformers torch gtts
+from transformers import pipeline
+from gtts import gTTS
+from IPython.display import Audio, display
+def chat_with_audio():
+    while True:
+        # Get user input
+        user_input = input("You: ")
+        
+        # Exit condition
+        if user_input.lower() in ["exit", "quit", "bye"]:
+            print("Chatbot: Goodbye! 👋")
+            break
+        
+        # Generate chatbot response
+        response = chatbot(user_input, max_length=100, do_sample=True, top_k=50)
+        bot_reply = response[0]["generated_text"]
+        print(f"Chatbot: {bot_reply}")
+        
+        # Convert text to speech
+        tts = gTTS(text=bot_reply, lang="en")
+        audio_path = "/content/response.mp3"
+        tts.save(audio_path)
+        
+        # Play the audio response
+        display(Audio(audio_path, autoplay=True))
+chat_with_audio()
