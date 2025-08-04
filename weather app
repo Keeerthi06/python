@@ -1,0 +1,85 @@
+import requests
+
+def fetch_weather(location):
+    """
+    Fetch weather from wttr.in for the given location string.
+    `location` can be:
+      - a city or place name: "London", "New York", "Mumbai"
+      - coordinates: "48.8566,2.3522" (lat,lon)
+      - "auto" to try auto-detecting via IP
+    Returns JSON dict on success, or None on failure.
+    """
+    if location.lower() == "auto":
+        # wttr.in supports auto by just passing empty, it will use client IP
+        url = "https://wttr.in/?format=j1"
+    else:
+        # encode the location into the URL (spaces are allowed; requests will quote)
+        url = f"https://wttr.in/{location}?format=j1"
+
+    try:
+        resp = requests.get(url, timeout=8)
+        resp.raise_for_status()
+        return resp.json()
+    except requests.RequestException as e:
+        print("Error fetching weather:", e)
+        return None
+
+def display_current(weather_json):
+    """
+    Extract and print the current condition from wttr.in JSON.
+    """
+    if not weather_json:
+        print("No data to display.")
+        return
+
+    # nearest_area may contain the interpreted location name
+    area = (
+        weather_json
+        .get("nearest_area", [{}])[0]
+        .get("areaName", [{}])[0]
+        .get("value", "Unknown")
+    )
+
+    # current condition data
+    current = weather_json.get("current_condition", [{}])[0]
+    temp_c = current.get("temp_C", "N/A")
+    feels_like = current.get("FeelsLikeC", "N/A")
+    weather_desc = (
+        current.get("weatherDesc", [{}])[0].get("value", "N/A")
+    )
+    humidity = current.get("humidity", "N/A")
+    wind_kmph = current.get("windspeedKmph", "N/A")
+    precip_mm = current.get("precipMM", "N/A")
+    uv_index = current.get("uvIndex", "N/A")
+
+    print(f"\nWeather for {area}:")
+    print(f"  Description : {weather_desc}")
+    print(f"  Temperature : {temp_c}°C (feels like {feels_like}°C)")
+    print(f"  Humidity    : {humidity}%")
+    print(f"  Wind Speed  : {wind_kmph} km/h")
+    print(f"  Precipitation: {precip_mm} mm")
+    print(f"  UV Index    : {uv_index}\n")
+
+def main():
+    print("Worldwide Weather App (no API key, powered by wttr.in)")
+    print("You can enter: city name (e.g., Tokyo), coordinates (e.g., 51.5,-0.1), or 'auto' to detect your location.")
+    while True:
+        user_input = input("Location ('exit' to quit): ").strip()
+        if not user_input:
+            print("Please type something (city, coordinates, or 'auto').")
+            continue
+        if user_input.lower() in ("exit", "quit"):
+            print("Goodbye.")
+            break
+
+        data = fetch_weather(user_input)
+        if data:
+            if "current_condition" in data:
+                display_current(data)
+            else:
+                print(f"Could not interpret location '{user_input}'. Try a different name or format.")
+        else:
+            print("Failed to retrieve weather. Check your internet connection and try again.")
+
+if __name__ == "__main__":
+    main()
