@@ -1,0 +1,54 @@
+# 1.Check if a number is positive, negative, or zero.
+
+num = int(input("Enter the number: "))
+
+if num > 0:
+    print(f"the {num} is a positive number")
+elif num < 0:
+    print(f"the {num} is a negative number ")
+else:
+    print(f"the {num} is zero")
+
+#Real time use cases: 1. Financial Applications: Account Balances , 2. Stock Market / Investment Dashboard , 3. Temperature Monitoring System (IoT, Weather Apps) , 4. Gaming: Scoring System , 5. Inventory Management System , 
+
+# 2.Determine whether a number is even or odd.
+
+num = int(input("Enter the number: "))
+
+if num % 2 == 0:
+    print(f"The {num} is a even number")
+else:
+    print(f"The {num} is odd number")
+Real time use cases : 1.Scheduling Systems, 2. Load Balancing in Servers , 3. User Segmentation , 4. Game Development , 5. Lottery or Raffle Systems , 6. Data Filtering in Reports
+
+#3.Check if a year is a leap year.
+year = int(input("Enter a year: "))
+
+if (year % 4 == 0):
+    if (year % 100 == 0):
+        if (year % 400 == 0):
+            print(f"{year} is a leap year")
+        else:
+            print(f"{year} is not a leap year")
+    else:
+        print(f"{year} is a leap year")
+else:
+    print(f"{year} is not a leap year")
+
+Real time use cases :Calendar apps / Date Pickers , Payroll systems, Astronomy software , Subscription services , Age calculators / Loan calculators
+
+# 4.Check if a person is eligible to vote (age ≥ 18).
+
+age = int(input("Enter the age: "))
+
+if age >= 18:
+    print(f"At age {age}, you are eligible to vote.")
+else:
+    print(f"At age {age}, you are not eligible to vote.")
+
+Real time usecases : Online voter registration portals , Government ID verification,App access control (e.g., 18+ restricted content),Job eligibility forms,Insurance or loan forms
+
+
+
+
+
